@@ -9,7 +9,7 @@ Johan Asplund
 Run the script as ``python befunge.py file_path speed``. If the ``speed`` is not specified, a default value of 100 will be used.
 
 ### Controls
-Use space to pause, and right arrow to step.
+Use ``space`` to pause, and ``right arrow`` to step.
 
 ## TODO
 
