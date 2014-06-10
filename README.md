@@ -7,11 +7,13 @@ Johan Asplund
 ## How to use
 Run the script as ``python befunge.py arg1 arg2``, where ``arg1`` is the befunge code, and where  ``arg2`` is an integer specifying the time between each iteration (one iteration = one step of the cursor) which defaults to 100 ms.
 
+### Controls
+Use ``space`` to pause the code, ``right arrow`` to step once, and ``esc`` to quit.
+
 ## TODO
 - Add syntax coloring
 - Maybe promt the user for inputs in some other way than in the terminal
 - Avoid the output to go off screen
-
 
 ### Other notes
 The font *Inconsolata* is owned by [Raph Levien](http://levien.com/type/myfonts/inconsolata.html).
