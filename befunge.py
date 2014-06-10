@@ -4,11 +4,12 @@ import re
 import random
 import sys
 from math import floor
+import six
 
 
 class Field(object):
 	def __init__(self, code):
-		super().__init__()
+		super(Field, self).__init__()
 		self.Y = len(code)
 		self.X = max([len(code[l]) for l in range(self.Y)])
 		self.code = []
@@ -21,7 +22,8 @@ class Field(object):
 		self.read = False
 
 	def step(self):
-		self.xy = ((self.xy[0] + self.direction[0]) % self.X, (self.xy[1] + self.direction[1]) % self.Y)
+		self.xy = ((self.xy[0] + self.direction[0]) % self.X,
+					(self.xy[1] + self.direction[1]) % self.Y)
 
 	def change_direction(self, newdir):
 		if newdir == "up":
@@ -63,7 +65,7 @@ def chhr(tal):
 	if tal <= 0:
 		return " "
 	else:
-		return chr(tal)
+		return six.unichr(tal)
 
 global stack
 global operations
@@ -101,8 +103,8 @@ def run_code():
 	outsurf.fill((0, 0, 0, 100))
 	stacksurf.fill((0, 0, 0, 100))
 	cursor.fill((255, 0, 0, 72))
-	codefont = pygame.font.Font("/Library/fonts/Inconsolata.otf", 24)
-	stackfont = pygame.font.Font("/Library/fonts/Inconsolata.otf", 18)
+	codefont = pygame.font.Font("./font/Inconsolata.otf", 24)
+	stackfont = pygame.font.Font("./font/Inconsolata.otf", 18)
 	outcount = 0
 	instring = ""
 
@@ -205,13 +207,16 @@ def run_code():
 		# Print stack
 		for x, s in enumerate(stack[::-1]):
 			try:
-				stackstack = stackfont.render(str(x+1) + ". " + str(s) + " " + hex(s) + " (" + chhr(s) + ")", 1, (230, 200, 80))
+				stackstack = stackfont.render(str(x+1) + ". " + str(s) + " "
+												+ hex(s) + " (" + chhr(s) + ")", 1, (230, 200, 80))
 			except Exception:
 				stackstack = stackfont.render(str(x+1) + ". " + str(s), 1, (230, 200, 80))
 			stacksurf.blit(stackstack, (0, stackcharheight*x))
 		try:
 			pygame.time.wait(int(sys.argv[2]))
 		except IndexError:
+			pygame.time.wait(100)
+		except ValueError:
 			pygame.time.wait(100)
 
 
