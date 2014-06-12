@@ -8,7 +8,10 @@ Johan Asplund
 Run the script as ``python befunge.py arg1 arg2``, where ``arg1`` is the befunge code, and where  ``arg2`` is an integer specifying the time between each iteration (one iteration = one step of the cursor) which defaults to 100 ms.
 
 ### Controls
-Use ``space`` to pause the code, ``right arrow`` to step once, and ``esc`` to quit.
+- ``space`` to pause the code
+- ``r`` to reset the code
+- ``right arrow`` to step once
+- ``esc`` to quit
 
 ## TODO
 - Add syntax coloring
