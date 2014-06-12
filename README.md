@@ -19,4 +19,4 @@ Run the script as ``python befunge.py arg1 arg2``, where ``arg1`` is the befunge
 - Prevent the output to go off screen
 
 ### Other notes
-The font *Inconsolata* is owned by [Raph Levien](http://levien.com/type/myfonts/inconsolata.html).
+The font *Inconsolata*, which is used in the interpreter, is owned by [Raph Levien](http://levien.com/type/myfonts/inconsolata.html).
