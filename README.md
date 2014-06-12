@@ -14,7 +14,7 @@ Run the script as ``python befunge.py arg1 arg2``, where ``arg1`` is the befunge
 - ``esc`` to quit
 
 ## TODO
-- ~Add syntax coloring~
+- ~~Add syntax coloring~~
 - Maybe promt the user for inputs in some other way than in the terminal
 - Prevent the output to go off screen
 
