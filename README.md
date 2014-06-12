@@ -14,9 +14,9 @@ Run the script as ``python befunge.py arg1 arg2``, where ``arg1`` is the befunge
 - ``esc`` to quit
 
 ## TODO
-- Add syntax coloring
+- ~Add syntax coloring~
 - Maybe promt the user for inputs in some other way than in the terminal
-- Avoid the output to go off screen
+- Prevent the output to go off screen
 
 ### Other notes
 The font *Inconsolata* is owned by [Raph Levien](http://levien.com/type/myfonts/inconsolata.html).
