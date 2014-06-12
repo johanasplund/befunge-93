@@ -90,7 +90,7 @@ def run_code():
 	stackcharheight = 16
 	stackcharwidth = 10
 	screenheight = the_field.Y*charheight+180
-	screenwidth = max(the_field.X*charwidth, 320)
+	screenwidth = max(the_field.X*charwidth+200, 320)
 	paused = False
 	step1 = False
 	screen = pygame.display.set_mode((screenwidth, screenheight))
@@ -106,6 +106,7 @@ def run_code():
 	codefont = pygame.font.Font("./font/Inconsolata.otf", 24)
 	stackfont = pygame.font.Font("./font/Inconsolata.otf", 18)
 	outcount = 0
+	outline = 0
 	instring = ""
 
 	for x, c in enumerate(the_field.code):
@@ -168,12 +169,17 @@ def run_code():
 			elif the_field.current_char() == ".":
 				outint = str(pop(stack))
 				out = stackfont.render(outint, 1, (230, 200, 80))
-				outsurf.blit(out, (stackcharwidth*outcount, 0))
+				outsurf.blit(out, (stackcharwidth*outcount, stackcharheight*outline))
 				outcount += len(outint)
 			elif the_field.current_char() == ",":
 				outtext = chhr(pop(stack))
-				out = stackfont.render(outtext, 1, (230, 200, 80))
-				outsurf.blit(out, (stackcharwidth*outcount, 0))
+				if outtext == "\n":
+					outline += 1
+					outcount = -1
+					out = stackfont.render("", 1, (230, 200, 80))
+				else:
+					out = stackfont.render(outtext, 1, (230, 200, 80))
+				outsurf.blit(out, (stackcharwidth*outcount, stackcharheight*outline))
 				outcount += len(outtext)
 			elif the_field.current_char() == ":":
 				stack.extend([pop(stack)]*2)
