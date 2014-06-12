@@ -67,9 +67,40 @@ def chhr(tal):
 	else:
 		return six.unichr(tal)
 
+
+def render_code(code):
+	codefont = pygame.font.Font("./font/Inconsolata.otf", 24)
+	for y, c in enumerate(code):
+			for x, char in enumerate(c):
+				if char in "0123456789":
+					charcolor = (152, 152, 152)
+				elif char in "+-*/%!`":
+					charcolor = (255, 136, 136)
+				elif char in "><^v?_|#@":
+					charcolor = (136, 255, 136)
+				elif char in ":\\$":
+					charcolor = (255, 255, 136)
+				elif char in ".,&~":
+					charcolor = (136, 255, 255)
+				elif char in "\"":
+					charcolor = (255, 136, 255)
+				elif char in "pg":
+					charcolor = (136, 136, 255)
+				else:
+					charcolor = (206, 206, 206)
+				codechar = codefont.render(char, 1, charcolor)
+				background.blit(codechar, (charwidth*x, charheight*y))
+
+
 global stack
 global operations
 global the_field
+global background
+global screen
+global charwidth
+global charheight
+global bgcolor
+global stackoutputcolor
 stack = []
 with open(sys.argv[1], "r") as c:
 	codelist = c.read().splitlines()
@@ -82,42 +113,46 @@ ops = {"+": lambda x1, x2: stack.append(x1 + x2),
 							"`": lambda x1, x2: stack.append(1) if x2 > x1 else stack.append(0),
 							"\\": lambda x1, x2: stack.extend([x1, x2]),
 							"g": lambda x1, x2: stack.append(ord(the_field.get_char(x2, x1)))}
+charwidth = 12
+charheight = 28
+screenheight = the_field.Y*charheight+180
+screenwidth = max(the_field.X*charwidth+200, 320)
+screen = pygame.display.set_mode((screenwidth, screenheight))
+background = pygame.Surface(screen.get_size()).convert()
+bgcolor = (52, 52, 52)
+stackoutputcolor = (230, 200, 70)
 
 
 def run_code():
-	charwidth = 12
-	charheight = 30
+	global the_field
+	global stack
+
+	def initiate_new_run():
+		render_code(the_field.code)
+		screen.blit(background, (0, 0))
+		screen.blit(stacksurf, (0, screenheight-180))
+		screen.blit(outsurf, (int(float(screenwidth)/2.0), screenheight-180))
+		screen.blit(cursor, (the_field.xy[0]*charwidth, the_field.xy[1]*charheight))
+		pygame.display.flip()
 	stackcharheight = 16
 	stackcharwidth = 10
-	screenheight = the_field.Y*charheight+180
-	screenwidth = max(the_field.X*charwidth+200, 320)
 	paused = False
 	step1 = False
-	screen = pygame.display.set_mode((screenwidth, screenheight))
+	reset = False
 	pygame.display.set_caption("Befunge-93 Interpreter")
-	background = pygame.Surface(screen.get_size()).convert()
 	cursor = pygame.Surface((charwidth, charheight), pygame.SRCALPHA)
 	stacksurf = pygame.Surface((screenwidth, 180), pygame.SRCALPHA)
 	outsurf = pygame.Surface((int(float(screenwidth)/2.0), 180), pygame.SRCALPHA)
-	background.fill((130, 147, 174))
+	background.fill(bgcolor)
 	outsurf.fill((0, 0, 0, 100))
 	stacksurf.fill((0, 0, 0, 100))
-	cursor.fill((255, 0, 0, 72))
-	codefont = pygame.font.Font("./font/Inconsolata.otf", 24)
+	cursor.fill((255, 255, 255, 130))
 	stackfont = pygame.font.Font("./font/Inconsolata.otf", 18)
 	outcount = 0
 	outline = 0
 	instring = ""
-
-	for x, c in enumerate(the_field.code):
-			codetext = codefont.render("".join(c), 1, (10, 10, 10))
-			background.blit(codetext, (0, charheight*x))
 	# Event loop
-	screen.blit(background, (0, 0))
-	screen.blit(stacksurf, (0, screenheight-180))
-	screen.blit(outsurf, (int(float(screenwidth)/2.0), screenheight-180))
-	screen.blit(cursor, (the_field.xy[0]*charwidth, the_field.xy[1]*charheight))
-	pygame.display.flip()
+	initiate_new_run()
 	while True:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -130,13 +165,18 @@ def run_code():
 					paused = False
 				elif event.key == pygame.K_ESCAPE:
 					return
+				elif event.key == pygame.K_r:
+					reset = True
 		if paused:
 			continue
 		if step1:
 			paused = True
 			step1 = False
+		if reset:
+			reset = False
+			break
 		screen.blit(background, (0, 0))
-		background.fill((130, 147, 174))
+		background.fill(bgcolor)
 		screen.blit(stacksurf, (0, screenheight-180))
 		screen.blit(outsurf, (int(float(screenwidth)/2.0), screenheight-180))
 		stacksurf.fill((0, 0, 0, 100))
@@ -168,7 +208,7 @@ def run_code():
 				the_field.change_direction("down") if pop(stack) == 0 else the_field.change_direction("up")
 			elif the_field.current_char() == ".":
 				outint = str(pop(stack))
-				out = stackfont.render(outint, 1, (230, 200, 80))
+				out = stackfont.render(outint, 1, stackoutputcolor)
 				outsurf.blit(out, (stackcharwidth*outcount, stackcharheight*outline))
 				outcount += len(outint)
 			elif the_field.current_char() == ",":
@@ -176,9 +216,9 @@ def run_code():
 				if outtext == "\n":
 					outline += 1
 					outcount = -1
-					out = stackfont.render("", 1, (230, 200, 80))
+					out = stackfont.render("", 1, stackoutputcolor)
 				else:
-					out = stackfont.render(outtext, 1, (230, 200, 80))
+					out = stackfont.render(outtext, 1, stackoutputcolor)
 				outsurf.blit(out, (stackcharwidth*outcount, stackcharheight*outline))
 				outcount += len(outtext)
 			elif the_field.current_char() == ":":
@@ -205,25 +245,26 @@ def run_code():
 			the_field.read_unichr(False)
 		else:
 			stack.append(ord(the_field.current_char()))
-		for x, c in enumerate(the_field.code):
-			codetext = codefont.render("".join(c), 1, (10, 10, 10))
-			background.blit(codetext, (0, charheight*x))
+		render_code(the_field.code)
 		the_field.step()
 		pygame.display.flip()
 		# Print stack
 		for x, s in enumerate(stack[::-1]):
 			try:
 				stackstack = stackfont.render(str(x+1) + ". " + str(s) + " "
-												+ hex(s) + " (" + chhr(s) + ")", 1, (230, 200, 80))
+												+ hex(s) + " (" + chhr(s) + ")", 1, stackoutputcolor)
 			except Exception:
-				stackstack = stackfont.render(str(x+1) + ". " + str(s), 1, (230, 200, 80))
+				stackstack = stackfont.render(str(x+1) + ". " + str(s), 1, stackoutputcolor)
 			stacksurf.blit(stackstack, (0, stackcharheight*x))
 		try:
 			pygame.time.wait(int(sys.argv[2]))
-		except IndexError:
-			pygame.time.wait(100)
-		except ValueError:
-			pygame.time.wait(100)
+		except Exception:
+			pygame.time.wait(70)
+	with open(sys.argv[1], "r") as c:
+		codelist = c.read().splitlines()
+	the_field = Field(codelist)
+	stack = []
+	run_code()
 
 
 if __name__ == '__main__':
