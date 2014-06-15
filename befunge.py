@@ -154,7 +154,6 @@ def run_code():
 	instring = ""
 	# Event loop
 	while True:
-		initiate_new_run()
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				return
@@ -176,6 +175,7 @@ def run_code():
 		if reset:
 			reset = False
 			break
+		initiate_new_run()
 		screen.blit(background, (0, 0))
 		background.fill(bgcolor)
 		screen.blit(stacksurf, (0, screenheight-180))
