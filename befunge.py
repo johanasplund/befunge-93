@@ -5,6 +5,7 @@ import random
 import sys
 from math import floor
 import six
+import inputbox
 
 
 class Field(object):
@@ -106,13 +107,13 @@ with open(sys.argv[1], "r") as c:
 	codelist = c.read().splitlines()
 the_field = Field(codelist)
 ops = {"+": lambda x1, x2: stack.append(x1 + x2),
-							"-": lambda x1, x2: stack.append(x2 - x1),
-							"*": lambda x1, x2: stack.append(x1 * x2),
-							"/": lambda x1, x2: stack.append(floor(float(x2)/float(x1))),
-							"%": lambda x1, x2: stack.append(x2 % x1),
-							"`": lambda x1, x2: stack.append(1) if x2 > x1 else stack.append(0),
-							"\\": lambda x1, x2: stack.extend([x1, x2]),
-							"g": lambda x1, x2: stack.append(ord(the_field.get_char(x2, x1)))}
+		"-": lambda x1, x2: stack.append(x2 - x1),
+		"*": lambda x1, x2: stack.append(x1 * x2),
+		"/": lambda x1, x2: stack.append(floor(float(x2)/float(x1))),
+		"%": lambda x1, x2: stack.append(x2 % x1),
+		"`": lambda x1, x2: stack.append(1) if x2 > x1 else stack.append(0),
+		"\\": lambda x1, x2: stack.extend([x1, x2]),
+		"g": lambda x1, x2: stack.append(ord(the_field.get_char(x2, x1)))}
 charwidth = 12
 charheight = 28
 screenheight = the_field.Y*charheight+180
@@ -152,8 +153,8 @@ def run_code():
 	outline = 0
 	instring = ""
 	# Event loop
-	initiate_new_run()
 	while True:
+		initiate_new_run()
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				return
@@ -230,10 +231,13 @@ def run_code():
 			elif the_field.current_char() == "p":
 				the_field.put_char(pop(stack), pop(stack), pop(stack))
 			elif the_field.current_char() == "&":
-				stack.append(int(input("Put a number in the stack: ")))
+				try:
+					stack.append(int(inputbox.ask(screen, "Put a number in the stack")))
+				except Exception:
+					continue
 			elif the_field.current_char() == "~":
 				if not instring:
-					instring = list(input("Put a string in the stack: "))
+					instring = list(inputbox.ask(screen, "Put a string to the stack"))
 					instring.append(-1)
 					instring = instring[::-1]
 				else:
@@ -245,9 +249,7 @@ def run_code():
 			the_field.read_unichr(False)
 		else:
 			stack.append(ord(the_field.current_char()))
-		render_code(the_field.code)
 		the_field.step()
-		pygame.display.flip()
 		# Print stack
 		for x, s in enumerate(stack[::-1]):
 			try:
@@ -259,7 +261,7 @@ def run_code():
 		try:
 			pygame.time.wait(int(sys.argv[2]))
 		except Exception:
-			pygame.time.wait(70)
+			pygame.time.wait(50)
 	with open(sys.argv[1], "r") as c:
 		codelist = c.read().splitlines()
 	the_field = Field(codelist)

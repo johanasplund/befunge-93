@@ -5,7 +5,7 @@ This is a Befunge-93 interpreter written in python 3.4 with the use of pygame. T
 Johan Asplund
 
 ## How to use
-Run the script as ``python befunge.py arg1 arg2``, where ``arg1`` is the befunge code, and where  ``arg2`` is an integer specifying the time between each iteration (one iteration = one step of the cursor) which defaults to 100 ms.
+Run the script as ``python befunge.py arg1 arg2``, where ``arg1`` is the befunge code, and where  ``arg2`` is an integer specifying the time between each iteration (one iteration = one step of the cursor) which defaults to 50 ms.
 
 ### Controls
 - ``space`` to pause the code
@@ -15,7 +15,7 @@ Run the script as ``python befunge.py arg1 arg2``, where ``arg1`` is the befunge
 
 ## TODO
 - ~~Add syntax coloring~~
-- Maybe promt the user for inputs in some other way than in the terminal
+- ~~Maybe promt the user for inputs in some other way than in the terminal~~
 - Prevent the output to go off screen
 
 ### Other notes
