@@ -240,6 +240,7 @@ def run_code():
 					instring = list(inputbox.ask(screen, "Put a string to the stack"))
 					instring.append(-1)
 					instring = instring[::-1]
+					stack.append(ord(instring.pop()))
 				else:
 					if instring[len(instring)-1] == -1:
 						stack.append(int(instring.pop()))

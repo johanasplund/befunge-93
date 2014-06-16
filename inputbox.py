@@ -55,9 +55,9 @@ def ask(screen, question):
             current_string = current_string[0:-1]
         elif inkey == pygame.K_RETURN:
             break
-        elif inkey <= 127:
-            current_string.append(chr(inkey))
         elif inkey == pygame.K_ESCAPE:
             break
+        elif inkey <= 127:
+            current_string.append(chr(inkey))
         display_box(screen, question + ": " + "".join(current_string))
     return "".join(current_string)
