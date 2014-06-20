@@ -109,7 +109,7 @@ the_field = Field(codelist)
 ops = {"+": lambda x1, x2: stack.append(x1 + x2),
 		"-": lambda x1, x2: stack.append(x2 - x1),
 		"*": lambda x1, x2: stack.append(x1 * x2),
-		"/": lambda x1, x2: stack.append(floor(float(x2)/float(x1))),
+		"/": lambda x1, x2: stack.append(int(floor(float(x2)/float(x1)))),
 		"%": lambda x1, x2: stack.append(x2 % x1),
 		"`": lambda x1, x2: stack.append(1) if x2 > x1 else stack.append(0),
 		"\\": lambda x1, x2: stack.extend([x1, x2]),
@@ -254,10 +254,11 @@ def run_code():
 		# Print stack
 		for x, s in enumerate(stack[::-1]):
 			try:
-				stackstack = stackfont.render(str(x+1) + ". " + str(s) + " "
-												+ hex(s) + " (" + chhr(s) + ")", 1, stackoutputcolor)
+				stackstack = stackfont.render("%d. %d [%s] (%s)" %
+											(x+1, s, hex(s), chhr(s)), 1, stackoutputcolor)
 			except Exception:
-				stackstack = stackfont.render(str(x+1) + ". " + str(s), 1, stackoutputcolor)
+				stackstack = stackfont.render("%d. %d (%s)" %
+											(x+1, s, chhr(s)), 1, stackoutputcolor)
 			stacksurf.blit(stackstack, (0, stackcharheight*x))
 		try:
 			pygame.time.wait(int(sys.argv[2]))
